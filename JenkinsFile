@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('compile') {
+            steps {
+                dir('C:\\develop\\DevOps-Usach\\modulo 03\\clase05\\ejemplo-maven') {
+                    sh 'mvn clean compile -e'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('C:\\develop\\DevOps-Usach\\modulo 03\\clase05\\ejemplo-maven') {
+                    sh 'mvn clean test -e'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                dir('C:\\develop\\DevOps-Usach\\modulo 03\\clase05\\ejemplo-maven') {
+                    sh 'mvn clean package -e'
+                }
+            }
+        }
+        
+        stage('Run Jar') {
+            steps {
+                dir('C:\\develop\\DevOps-Usach\\modulo 03\\clase05\\ejemplo-maven') {
+                    sh 'nohup bash mvnw spring-boot:run &'
+                }
+            }
+        }
+    }
+}
