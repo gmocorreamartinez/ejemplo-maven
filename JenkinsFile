@@ -4,34 +4,33 @@ pipeline {
     stages {
         stage('compile') {
             steps {
-                dir('C:\\develop\\DevOps-Usach\\modulo 03\\clase05\\ejemplo-maven') {
-                    sh 'mvn clean compile -e'
-                }
+                sh 'mvn clean compile -e'
             }
         }
 
         stage('Test') {
             steps {
-                dir('C:\\develop\\DevOps-Usach\\modulo 03\\clase05\\ejemplo-maven') {
-                    sh 'mvn clean test -e'
-                }
+                sh 'mvn clean test -e'
             }
         }
 
         stage('Package') {
             steps {
-                dir('C:\\develop\\DevOps-Usach\\modulo 03\\clase05\\ejemplo-maven') {
-                    sh 'mvn clean package -e'
-                }
+                sh 'mvn clean package -e'
             }
         }
-        
-        stage('Run Jar') {
-            steps {
-                dir('C:\\develop\\DevOps-Usach\\modulo 03\\clase05\\ejemplo-maven') {
-                    sh 'nohup bash mvnw spring-boot:run &'
-                }
+
+        // Dejarlo despues del package es una buena practica
+        stage('Sonar') {
+            withSonarQubeEnv(installationName: 'SonarQube') { 
+                sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
             }
-        }
+        }        
+
+ //       stage('Run Jar') {
+ //           steps {
+ //                   sh 'nohup bash mvnw spring-boot:run &'
+ //           }
+//      }
     }
 }
