@@ -29,7 +29,6 @@ pipeline {
         stage('Run Jar') {
             steps {
                 dir('C:\\develop\\DevOps-Usach\\modulo 03\\clase05\\ejemplo-maven') {
-                    //sh 'nohup bash mvnw spring-boot:run &'
                 }
             }
         }
