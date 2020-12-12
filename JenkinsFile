@@ -1,11 +1,11 @@
 pipeline {
     agent any
-    stage('downloadNexus') {
-        steps {
-            sh 'curl -X GET admin:AK1mpr., http://localhost:8081/#browse/browse:test-nexus:org%2Fspringframework%2Fboot%2Fspring-boot-starter-parent%2F0.0.1%2Fspring-boot-starter-parent-0.0.1.jar -O'
-        }
-    }
     stages {
+        stage('downloadNexus') {
+            steps {
+                sh 'curl -X GET admin:AK1mpr., http://localhost:8081/#browse/browse:test-nexus:org%2Fspringframework%2Fboot%2Fspring-boot-starter-parent%2F0.0.1%2Fspring-boot-starter-parent-0.0.1.jar -O'
+            }
+        }
         stage('compile') {
             steps {
                 sh 'mvn clean compile -e'
