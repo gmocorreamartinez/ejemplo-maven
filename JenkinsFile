@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    stage('downloadNexus') {
+        steps {
+            sh 'curl -X GET admin:AK1mpr., http://localhost:8081/#browse/browse:test-nexus:org%2Fspringframework%2Fboot%2Fspring-boot-starter-parent%2F0.0.1%2Fspring-boot-starter-parent-0.0.1.jar -O'
+        }
+    }
     stages {
         stage('compile') {
             steps {
@@ -16,27 +21,9 @@ pipeline {
                 sh 'mvn clean package -e'
             }
         }
-        // Dejarlo despues del package es una buena practica
-        stage('Sonar') {
+        stage('uploadNexus') {
             steps {
-                withSonarQubeEnv(installationName: 'SonarQube') { 
-                    sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.7.0.1746:sonar'
-                }
-            }
-        }        
-        stage('Run') {
-            steps {
-                sh 'mvn spring-boot:run &'
-            }
-        }
-        stage('Sleep') {
-            steps {
-                sh 'sleep 50'
-            }
-        }
-        stage('Testing') {
-            steps {
-                sh 'curl -X GET "http://localhost:8081/rest/mscovid/test?msg=testing"'
+                nexusPublisher nexusInstanceId: 'nexus', nexusRepositoryId: 'test-nexus', packages: [[$class: 'MavenPackage', mavenAssetList: [[classifier: '', extension: 'jar', filePath: 'C:\\develop\\DevOps-Usach\\modulo03\\proyecto-clases\\ejemplo-maven\\build\\DevOpsUsach2020-0.0.1.jar']], mavenCoordinate: [artifactId: 'spring-boot-starter-parent', groupId: 'org.springframework.boot', packaging: 'jar', version: '0.0.1']]]
             }
         }
     }
